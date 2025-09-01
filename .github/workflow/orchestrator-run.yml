@@ -8,6 +8,7 @@ on:
 jobs:
   run-orchestrator:
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout repo
       - name: Checkout repository
@@ -27,22 +28,15 @@ jobs:
       - name: Build Playwright Docker image
         run: docker build -t playwright-image .
 
-      # Step 5: Install Node dependencies
-      - name: Install orchestrator dependencies
+      # Step 5: Install orchestrator dependencies
+      - name: Install Node dependencies
         run: npm install
 
-      # Step 6: Run orchestrator in background
-      - name: Start orchestrator server
-        run: |
-          nohup node orchestrator.js & 
-          sleep 5 # give server time to start
+      # Step 6: Run orchestrator tests directly
+      - name: Run orchestrator tests
+        run: node orchestrator.js --run-tests
 
-      # Step 7: Trigger tests via API
-      - name: Trigger /run-tests
-        run: |
-          curl -X POST http://localhost:3000/run-tests
-
-      # Step 8: Upload Playwright report
+      # Step 7: Upload Playwright report
       - name: Upload Playwright report
         uses: actions/upload-artifact@v3
         with:
